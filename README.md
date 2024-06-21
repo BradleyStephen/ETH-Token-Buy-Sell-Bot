@@ -1,4 +1,4 @@
-ETH Token Trading Bot
+### ETH Token Trading Bot
 
 ## Overview
 
