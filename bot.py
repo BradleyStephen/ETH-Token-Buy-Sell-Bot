@@ -149,15 +149,29 @@ def sell_token(token_address, token_amount):
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
     return receipt
 
-# Example usage of buy and sell functions
-token_address = '0x69babE9811CC86dCfC3B8f9a14de6470Dd18EDA4'  # Replace with the actual token address
-eth_amount = 0.00001  # Amount of ETH to swap for tokens
-token_amount = 100  # Amount of tokens to swap for ETH
+def main():
+    while True:
+        print("\nWhat would you like to do?")
+        print("1. Buy Tokens")
+        print("2. Sell Tokens")
+        print("3. Exit")
+        
+        choice = input("Enter your choice (1/2/3): ")
+        
+        if choice == '1':
+            token_address = input("Enter the token address you want to buy: ")
+            eth_amount = float(input("Enter the amount of ETH you want to spend: "))
+            receipt = buy_token(token_address, eth_amount)
+            print("Buy Transaction Receipt:", receipt)
+        elif choice == '2':
+            token_address = input("Enter the token address you want to sell: ")
+            token_amount = int(input("Enter the amount of tokens you want to sell: "))
+            receipt = sell_token(token_address, token_amount)
+            print("Sell Transaction Receipt:", receipt)
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
-# Buy tokens
-buy_receipt = buy_token(token_address, eth_amount)
-print("Buy Transaction Receipt:", buy_receipt)
-
-# Sell tokens
-# sell_receipt = sell_token(token_address, token_amount)
-# print("Sell Transaction Receipt:", sell_receipt)
+if __name__ == "__main__":
+    main()
