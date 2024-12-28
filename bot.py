@@ -1,10 +1,11 @@
 import requests
 import json
 import os
-from eth_account import Account
 from web3 import Web3
-from web3.middleware import geth_poa_middleware
+from web3.middleware import ExtraDataToPOAMiddleware
 from dotenv import load_dotenv
+from eth_account import Account
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,14 +17,15 @@ private_key = os.getenv('PRIVATE_KEY')
 # Initialize Web3 provider
 w3 = Web3(Web3.HTTPProvider(f'https://mainnet.infura.io/v3/{infura_project_id}'))
 
-# Check if Web3 is connected
+#Check connection
 if w3.is_connected():
     print("Web3 is connected")
 else:
     raise ConnectionError("Failed to connect to the Ethereum network")
 
-# Inject the POA compatibility middleware to the innermost layer
-w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+# Inject the PoA compatibility middleware
+w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
+
 
 # Create an account object from the private key
 account = Account.from_key(private_key)
@@ -83,7 +85,7 @@ def buy_token(token_address, eth_amount):
     signed_tx = w3.eth.account.sign_transaction(tx, private_key)
 
     # Send transaction
-    tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
 
     # Wait for transaction receipt
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
